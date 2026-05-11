@@ -1,0 +1,45 @@
+package homepage_templ 
+
+import (
+	"color_picker/cmd/types"
+	"fmt"
+)
+
+templ Setup(container types.Color_container) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<link rel="stylesheet" href="/static/styles.css"/>
+			<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0/bundles/datastar.js"></script>
+		</head>
+		<body>
+			<main>
+				<button data-on:click="@get('/get_rando_color')">Random color</button>
+				<button id="roulette" data-on:click="@get('/roulette')">Roulette</button>
+				@get_clr_container(container)
+			</main>
+		</body>
+	</html>
+}
+
+templ get_clr_container(container types.Color_container) {
+	<div id="clr-container">
+		for i, color := range container.Colors {
+			<div
+				class="clr-panel"
+				id={ fmt.Sprintf("cl-%d", i) }
+				style={ fmt.Sprintf("background-color: rgb(%d, %d, %d)", color.R, color.G, color.B) }
+			></div>
+		}
+	</div>
+}
+
+templ roulette(frame_time int) {
+	if frame_time <= 0 {
+		<button id="roulette" data-on:click="@get('/roulette')">Roulette</button>
+	} else {
+		<button id="roulette" {fmt.Sprintf("data-on-interval.%d", frame_time)}="@get('/roulette')">
+			Roulette
+		</button>
+	}
+}

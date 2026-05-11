@@ -1,0 +1,16 @@
+main{
+    margin: 30px;
+}
+
+#clr-container{
+    background-color: grey;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 90vh;
+
+    .clr-panel{
+        display:flex;
+        flex: 1 0 auto;
+    }
+}
