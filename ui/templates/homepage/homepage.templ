@@ -14,9 +14,13 @@ templ Setup(container types.Color_container) {
 		</head>
 		<body>
 			<main>
-				@Roulette(0,0,container)
-                <div id"spacebar" data-on:keydown__window="evt.key === ' ' && @get('/get_rando_color')">Press spacebar for a random color</div>
+				@Roulette(0, 0, container)
 			</main>
+			<footer>
+				<div id="spacebar" data-on:keydown__window="evt.key === ' ' && @get('/get_rando_color')">
+					<kbd>Space</kbd> `for` random color
+				</div>
+			</footer>
 		</body>
 	</html>
 }
@@ -33,10 +37,10 @@ templ Get_clr_container(container types.Color_container) {
 	</div>
 }
 
-templ Roulette(index int,frame_time float32, container types.Color_container) {
-	if index == 0{
+templ Roulette(index int, frame_time float32, container types.Color_container) {
+	if index == 0 {
 		<button id="roulette" data-on:click="@get('/roulette?ind=0')">Roulette</button>
-        @Get_clr_container(container)
+		@Get_clr_container(container)
 	} else {
 		<button
 			id="roulette"
@@ -45,6 +49,6 @@ templ Roulette(index int,frame_time float32, container types.Color_container) {
 		>
 			Roulette
 		</button>
-        @Get_clr_container(container)
+		@Get_clr_container(container)
 	}
 }

@@ -76,9 +76,7 @@ func get_roulette(w http.ResponseWriter, r *http.Request) {
 
 	if ind < len(frame_times) {
 		frame_time = frame_times[ind]
-		fmt.Printf("index: %d\n", ind)
 	} else {
-		fmt.Printf("len: %d, index: %d\n", len(frame_times), ind)
 		ind = 0
 	}
 
