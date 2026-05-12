@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
+	"strconv"
+	"time"
 )
 import "github.com/starfederation/datastar-go/datastar"
 
@@ -43,7 +45,7 @@ func get_home_page(w http.ResponseWriter, r *http.Request) {
 
 func get_rando_color(w http.ResponseWriter, r *http.Request) {
 	rando_container := get_random_color_container()
-	component := homepage_templ.Setup(rando_container)
+	component := homepage_templ.Get_clr_container(rando_container)
 
 	sse := datastar.NewSSE(w, r)
 	sse.PatchElementTempl(component)
@@ -63,10 +65,27 @@ func get_random_color_container() types.Color_container {
 	return res
 }
 
-func get_roulette(w http.ResponseWriter, r *http.Request) {
-	rando_container := get_random_color_container()
-	component := homepage_templ.Setup(rando_container)
+var frame_times = []float32{0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14} // this is in ns
 
+func get_roulette(w http.ResponseWriter, r *http.Request) {
+	s_ind := r.FormValue("ind")
+	ind, _ := strconv.Atoi(s_ind)
+	ind++
+
+	var frame_time float32 = 0
+
+	if ind < len(frame_times) {
+		frame_time = frame_times[ind]
+		fmt.Printf("index: %d\n", ind)
+	} else {
+		fmt.Printf("len: %d, index: %d\n", len(frame_times), ind)
+		ind = 0
+	}
+
+	rando_container := get_random_color_container()
+	component := homepage_templ.Roulette(ind, frame_time, rando_container)
+
+	time.Sleep(time.Millisecond * time.Duration(frame_time))
 	sse := datastar.NewSSE(w, r)
 	sse.PatchElementTempl(component)
 }

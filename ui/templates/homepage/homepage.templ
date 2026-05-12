@@ -15,14 +15,13 @@ templ Setup(container types.Color_container) {
 		<body>
 			<main>
 				<button data-on:click="@get('/get_rando_color')">Random color</button>
-				<button id="roulette" data-on:click="@get('/roulette')">Roulette</button>
-				@get_clr_container(container)
+				@Roulette(0,0,container)
 			</main>
 		</body>
 	</html>
 }
 
-templ get_clr_container(container types.Color_container) {
+templ Get_clr_container(container types.Color_container) {
 	<div id="clr-container">
 		for i, color := range container.Colors {
 			<div
@@ -34,12 +33,18 @@ templ get_clr_container(container types.Color_container) {
 	</div>
 }
 
-templ roulette(frame_time int) {
-	if frame_time <= 0 {
-		<button id="roulette" data-on:click="@get('/roulette')">Roulette</button>
+templ Roulette(index int,frame_time float32, container types.Color_container) {
+	if index == 0{
+		<button id="roulette" data-on:click="@get('/roulette?ind=0')">Roulette</button>
+        @Get_clr_container(container)
 	} else {
-		<button id="roulette" {fmt.Sprintf("data-on-interval.%d", frame_time)}="@get('/roulette')">
+		<button
+			id="roulette"
+			{ fmt.Sprintf("data-on-interval__duration.%.2fms", float32(frame_time * 10)) }
+			{ fmt.Sprintf("=@get('/roulette?ind=%d')", index) }
+		>
 			Roulette
 		</button>
+        @Get_clr_container(container)
 	}
 }
