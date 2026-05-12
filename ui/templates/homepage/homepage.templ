@@ -14,8 +14,8 @@ templ Setup(container types.Color_container) {
 		</head>
 		<body>
 			<main>
-				<button data-on:click="@get('/get_rando_color')">Random color</button>
 				@Roulette(0,0,container)
+                <div id"spacebar" data-on:keydown__window="evt.key === ' ' && @get('/get_rando_color')">Press spacebar for a random color</div>
 			</main>
 		</body>
 	</html>
