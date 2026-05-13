@@ -9,18 +9,38 @@ templ Setup(container types.Color_container) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
-			<link rel="stylesheet" href="/static/styles.css"/>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Color Roulette</title>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+			<!-- Load static css from go backend, fallback to local styles.css -->
+			<link rel="stylesheet" href="/static/styles.css" onerror="this.onerror=null;this.href='styles.css';"/>
+			<link rel="stylesheet" href="styles.css"/>
 			<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0/bundles/datastar.js"></script>
 		</head>
 		<body>
-			<main>
-				@Roulette(0, 0, container)
-			</main>
-			<footer>
-				<div id="spacebar" data-on:keydown__window="evt.key === ' ' && @get('/get_rando_color')">
-					<kbd>Space</kbd> `for` random color
-				</div>
-			</footer>
+			<div class="background">
+				<div class="blob blob-1"></div>
+				<div class="blob blob-2"></div>
+				<div class="blob blob-3"></div>
+			</div>
+			<div class="content-wrapper">
+				<header>
+					<h1>Color Roulette</h1>
+					<p>Generate beautiful, randomized color palettes instantly</p>
+				</header>
+				<main>
+					@Roulette(0, 0, container)
+				</main>
+				<footer>
+					<div id="spacebar" data-on:keydown__window="evt.key === ' ' && @get('/get_rando_color')">
+						<kbd>Space</kbd>
+						<span>Press to randomize color</span>
+					</div>
+				</footer>
+			</div>
 		</body>
 	</html>
 }
@@ -32,23 +52,35 @@ templ Get_clr_container(container types.Color_container) {
 				class="clr-panel"
 				id={ fmt.Sprintf("cl-%d", i) }
 				style={ fmt.Sprintf("background-color: rgb(%d, %d, %d)", color.R, color.G, color.B) }
-			></div>
+			>
+				<div class="hex-label">{ color.Hex_code }</div>
+			</div>
 		}
 	</div>
 }
 
 templ Roulette(index int, frame_time float32, container types.Color_container) {
-	if index == 0 {
-		<button id="roulette" data-on:click="@get('/roulette?ind=0')">Roulette</button>
-		@Get_clr_container(container)
-	} else {
-		<button
-			id="roulette"
-			{ fmt.Sprintf("data-on-interval__duration.%.2fms", float32(frame_time * 10)) }
-			{ fmt.Sprintf("=@get('/roulette?ind=%d')", index) }
-		>
-			Roulette
-		</button>
-		@Get_clr_container(container)
-	}
+	<div id="main-container">
+		if index == 0 {
+			@Get_clr_container(container)
+			<div id="button-container">
+				<button id="roulette" data-on:click="@get('/roulette?ind=0')">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.67-1.65"></path></svg>
+					Spin Roulette
+				</button>
+			</div>
+		} else {
+			@Get_clr_container(container)
+			<div id="button-container">
+				<button
+					id="roulette"
+					{ fmt.Sprintf("data-on-interval__duration.%.2fms", float32(frame_time * 10)) }
+					{ fmt.Sprintf("=@get('/roulette?ind=%d')", index) }
+				>
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.67-1.65"></path></svg>
+					Spin Roulette
+				</button>
+			</div>
+		}
+	</div>
 }

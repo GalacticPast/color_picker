@@ -59,6 +59,7 @@ func get_random_color_container() types.Color_container {
 		cl.R = uint8(rand.Uint32() % 256)
 		cl.G = uint8(rand.Uint32() % 256)
 		cl.B = uint8(rand.Uint32() % 256)
+		cl.Hex_code = fmt.Sprintf("%X%X%X", cl.R, cl.G, cl.B)
 
 		res.Colors[i] = cl
 	}
